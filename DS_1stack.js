@@ -1,7 +1,7 @@
 // 차이점 공부가 목표이기 때문에, GPT를 바탕으로 코드 입력하고 일부만 수정함.
 
 // Array List
-class Stack {
+class StackA {
     constructor() {
         // Array 자료형 만들기
         this.items = [];
@@ -46,7 +46,7 @@ class Node {
     }
 }
 // Stack식 메서드 만들기
-class Stack {
+class StackL {
     constructor() {
         this.top = null; // 처음엔 null
         this.size = 0; // 처음엔 0
