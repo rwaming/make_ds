@@ -88,7 +88,7 @@ class GraphL { // 가중치x
     removeEdge(v, e) {
         this.graph.get(v).delete(e);
     }
-    // 모두 삭제
+    // 모든 edge 삭제
     clearEdges(v) {
         this.graph.get(v).clear();
     }
@@ -98,7 +98,64 @@ class GraphL { // 가중치x
     }
     // edge여부 확인(boolean)
     hasEdge(v, e) {
+        return this.graph.get(v).has(e); // Map의 value인, 객체 Set에 대한 .has(edge);
+    }
+    // 갯수 반환
+    getEdgeSize(v) {
+        return this.graph.get(v).size;
+    }
+}
+
+class GraphL_W { // 가중치o
+    constructor() {
+        this.graph = new Map();
+    }
+
+    // vertex
+    // 추가 (vertex, edge(edgeV - weight))
+    addVertex(v, e, w) {
+        this.graph.set(v, new Map());
+        // e있으면 && edge추가(e, w없거나 NaN면 1로 지정)
+        e !== undefined && this.graph.get(v).set(e, isNaN(w) ? 1 : w);
+    }
+    // 삭제
+    removeVertex(v) {
+        this.graph.delete(v);
+    }
+    // 갯수 반환
+    getSize() {
+        return this.graph.size; // ()가 필요x
+    }
+
+    // edge
+    // 한방향 추가 (중복 edge는 무시됨)
+    addEdge(v, e, w) {
+        this.graph.get(v).set(e, isNaN(w) ? 1 : w); // 가중치 미지정시 1
+    }
+    // 양방향 추가 (중복 edge는 무시됨)
+    connectEdges(v1, v2, w1, w2) {
+        this.graph.get(v1).set(v2, isNaN(w1) ? 1 : w1); // v1 -> v2 가중치w1 미지정시 1
+        this.graph.get(v2).set(v1, isNaN(w2) ? 1 : w2); // v1 <- v2 가중치w2 미지정시 1
+    }
+    // 특정 edge 삭제
+    removeEdge(v, e) {
+        this.graph.get(v).delete(e);
+    }
+    // 모두 삭제
+    clearEdges(v) {
+        this.graph.get(v).clear();
+    }
+    // 모든 edge 반환
+    getEdges(v) {
+        return this.graph.get(v); // Map(갯수) { edge => weight, ...} 형식으로 반환
+    }
+    // edge여부 확인(boolean)
+    hasEdge(v, e) {
         return this.graph.get(v).has(e);
+    }
+    // edge의 가중치 확인
+    getWeight(v, e) {
+        return this.graph.get(v).get(e);
     }
     // 갯수 반환
     getEdgeSize(v) {
