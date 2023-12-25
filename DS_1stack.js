@@ -30,7 +30,7 @@ class StackA {
     }
     // 모든 스택 확인
     print() {
-        return this.items;
+        return this.items.join(' <- ');
     }
 }
 
@@ -56,7 +56,7 @@ class StackL {
     }
     // top 삭제
     pop() {
-        if (!this.top) {
+        if (this.isEmpty()) {
             return "Stack is empty";
         }
         const popped = this.top; // 반환용 저장
@@ -64,9 +64,9 @@ class StackL {
         this.size--; // stack 감소
         return popped.value; // 보통 노드보단 value를 반환하는 게 보통이라고 함
     }
-    // top 확인
+    // top 값 확인
     peek() {
-        return this.top;
+        return this.top?.value ?? "Stack is empty";
     }
     // 비어있는지
     isEmpty() {
@@ -80,10 +80,10 @@ class StackL {
     print() {
         const stack = []; // 반환할 배열 만들기
         let node = this.top; // 노드를 담을 변수
-        while (node) { // null일 때 중지
+        while (node !== null) { // null일 때 중지
             stack.push(node);
             node = node.next;
         }
-        return stack;
+        return stack.join(' -> ');
     }
 }
