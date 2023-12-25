@@ -13,15 +13,12 @@ class StackA {
     }
     // top 삭제
     pop() {
-        if (this.items.length === 0) {
-            return "Stack is empty";
-        }
         // .pop()만으로 요소 제거 + 반환. 단, 함수실행 후 반환하려면 return이 필요
-        return this.items.pop();
+        return this.isEmpty() ? "Stack is empty" : this.items.pop();
     }
     // top 확인
     peek() {
-        return this.items[this.items.length - 1];
+        return this.isEmpty() ? "Stack is empty" : this.items[this.items.length - 1];
     }
     // 비어있는지
     isEmpty() {
