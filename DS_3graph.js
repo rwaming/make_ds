@@ -51,7 +51,8 @@ const graphA_5 = [
 ];
 
 // Linked List (GPT가 이상한 대답만 해서, 따로 공부해서 만듦)
-class GraphL { // 가중치x
+class GraphL {
+    // 가중치x
     constructor() {
         this.graph = new Map(); // (key-value)를 관리하는 객체 Map 이용
         // key는 vertex의 이름과 값으로 사용,
@@ -63,9 +64,11 @@ class GraphL { // 가중치x
     addVertex(v, e) {
         this.graph.set(v, new Set(e ?? [])); // value들을 관리하는 객체 Set 이용
     }
-    // 삭제
+    // 삭제 및 그의 edge들 반환  * v없으면, undefined 반환
     removeVertex(v) {
+        const del = this.graph.get(v);
         this.graph.delete(v);
+        return del;
     }
     // 갯수 반환
     getSize() {
@@ -77,36 +80,40 @@ class GraphL { // 가중치x
     addEdge(v, e) {
         // .get(키v)로 반환된 값(객체 Set)
         // Set.add(값)으로 값e 추가
-        this.graph.get(v).add(e);
+        this.graph.get(v)?.add(e);
     }
-    // 양방향 추가 (중복 edge는 무시됨)
+    // 양방향 추가 (edge는 Set으로 관리되므로, add(중복 edge)는 무시됨)
     connectEdges(v1, v2) {
-        this.graph.get(v1).add(v2);
-        this.graph.get(v2).add(v1);
+        this.graph.get(v1)?.add(v2);
+        this.graph.get(v2)?.add(v1);
     }
     // 특정 edge 삭제
     removeEdge(v, e) {
-        this.graph.get(v).delete(e);
+        this.graph.get(v)?.delete(e);
     }
-    // 모든 edge 삭제
+    // 모든 edge 삭제하고 그 edge들 반환  * v없으면, undefined 반환
     clearEdges(v) {
-        this.graph.get(v).clear();
+        const delSet = this.graph.get(v);
+        this.graph.get(v)?.clear();
+        return delSet;
     }
-    // 모든 edge 반환
-    getEdges(v) {
-        return this.graph.get(v); // 키(v)의 값(e)을 반환
+    // 모든 edge 복제본 반환  * v없으면, undefined 반환
+    showEdges(v) {
+        // Set 복제(키(vertex)의 값(edge)) **GPT왈 데이터 무결성 목적
+        return this.graph.has(v) ? new Set(this.graph.get(v)) : undefined;
     }
-    // edge여부 확인(boolean)
+    // edge여부 확인(boolean)  * v없으면, undefined 반환
     hasEdge(v, e) {
-        return this.graph.get(v).has(e); // Map의 value인, 객체 Set에 대한 .has(edge);
+        return this.graph.get(v)?.has(e); // Map의 value인, Set에 대한 .has(edge);
     }
-    // 갯수 반환
+    // 갯수 반환  * v없으면, undefined 반환
     getEdgeSize(v) {
-        return this.graph.get(v).size;
+        return this.graph.get(v)?.size;
     }
 }
 
-class GraphL_W { // 가중치o
+class GraphL_W {
+    // 가중치o
     constructor() {
         this.graph = new Map();
     }
@@ -118,47 +125,52 @@ class GraphL_W { // 가중치o
         // e있으면 && edge추가(e, w없거나 NaN면 1로 지정)
         e !== undefined && this.graph.get(v).set(e, isNaN(w) ? 1 : w);
     }
-    // 삭제
+    // 삭제 및 그의 edge, weight 반환  * v없으면, undefined 반환
     removeVertex(v) {
+        const delMap = this.graph.get(v);
         this.graph.delete(v);
+        return delMap;
     }
     // 갯수 반환
     getSize() {
-        return this.graph.size; // ()가 필요x
+        return this.graph.size;
     }
 
     // edge
     // 한방향 추가 (중복 edge는 무시됨)
     addEdge(v, e, w) {
-        this.graph.get(v).set(e, isNaN(w) ? 1 : w); // 가중치 미지정시 1
+        this.graph.get(v)?.set(e, isNaN(w) ? 1 : w); // 가중치 미지정시 1
     }
-    // 양방향 추가 (중복 edge는 무시됨)
+    // 양방향 추가 (Map으로 중복된 키=edge는 무시됨)
     connectEdges(v1, v2, w1, w2) {
-        this.graph.get(v1).set(v2, isNaN(w1) ? 1 : w1); // v1 -> v2 가중치w1 미지정시 1
-        this.graph.get(v2).set(v1, isNaN(w2) ? 1 : w2); // v1 <- v2 가중치w2 미지정시 1
+        this.graph.get(v1)?.set(v2, isNaN(w1) ? 1 : w1); // v1 -> v2 가중치w1 미지정시 1
+        this.graph.get(v2)?.set(v1, isNaN(w2) ? 1 : w2); // v1 <- v2 가중치w2 미지정시 1
     }
     // 특정 edge 삭제
     removeEdge(v, e) {
-        this.graph.get(v).delete(e);
+        this.graph.get(v)?.delete(e);
     }
-    // 모두 삭제
+    // 모든 edge 삭제하고 그 edge들 반환  * v없으면, undefined 반환
     clearEdges(v) {
-        this.graph.get(v).clear();
+        const delMap = this.graph.get(v);
+        this.graph.get(v)?.clear();
+        return delMap;
     }
-    // 모든 edge 반환
-    getEdges(v) {
-        return this.graph.get(v); // Map(갯수) { edge => weight, ...} 형식으로 반환
+    // 모든 edge 복제본 반환  * v없으면, undefined 반환
+    showEdges(v) {
+        // Map(갯수) { e => w, ...} 형식으로 반환 **무결성목적 복제
+        return this.graph.has(v) ? new Map(this.graph.get(v)) : undefined;
     }
-    // edge여부 확인(boolean)
+    // edge여부 확인(boolean)  * v없으면, undefined 반환
     hasEdge(v, e) {
-        return this.graph.get(v).has(e);
+        return this.graph.get(v)?.has(e);
     }
-    // edge의 가중치 확인
+    // edge의 가중치 확인  * v없으면, undefined 반환
     getWeight(v, e) {
-        return this.graph.get(v).get(e);
+        return this.graph.get(v)?.get(e);
     }
-    // 갯수 반환
+    // 갯수 반환  * v없으면 undefined
     getEdgeSize(v) {
-        return this.graph.get(v).size;
+        return this.graph.get(v)?.size;
     }
 }
